@@ -1,0 +1,56 @@
+# Default engine configuration. Every key is optional; omitted keys use code defaults.
+# `--strength natural|balanced|close` overrides pitch/timing/pause strengths afterwards.
+
+audio:
+  sample_rate: 44100
+  analysis_sample_rate: 16000
+  hop_ms: 10
+
+f0:
+  method: pyin          # pyin | crepe (pip install -e .[crepe])
+  fmin: 65
+  fmax: 1100
+
+vad:
+  energy_db: -45        # relative to the loudest frame
+  f0_conf: 0.3          # pYIN voiced probability is often ~0.4 on low notes
+  min_pause_ms: 250
+  min_phrase_ms: 200
+  breath_min_ms: 120
+  breath_centroid_hz: 1500
+
+notes:
+  split_semitones: 0.8
+  min_note_ms: 60
+
+alignment:
+  coarse_hop_ms: 50
+  max_coarse_cells: 8000000
+  refine_pad_s: 0.5
+  refine_max_chunk_s: 10
+  max_cost_ratio: 0.55  # above this the user is considered to sing something else
+  weight_chroma: 0.5
+  weight_pitch: 1.0     # relative pitch, 1 semitone = 0.33 (robust to detuned notes)
+  weight_energy: 0.5
+  weight_voiced: 0.5
+  trim_margin_s: 0.2
+  step_penalty: 0.15    # extra cost of a non-diagonal DTW step (stops paths sticking on long notes)
+
+pitch:
+  correction_strength: 0.60
+  max_shift_semitones: 4
+  smoothing: 0.15       # seconds (FWHM of the Gaussian applied to the correction curve)
+  octave_detect: true
+  key_mismatch_cents: 150
+
+# Phase 2-4 (not applied yet)
+timing:   { enabled: true, strength: 0.55, min_ratio: 0.67, max_ratio: 1.5 }
+pause:    { enabled: true, strength: 0.50, keep_breath: true }
+dynamics: { transfer: true, strength: 0.4, max_gain_db: 6, compression: true, limiter: true, target_lufs: -16 }
+
+backend: world          # world | rubberband
+world:
+  f0_method: harvest    # harvest (quality) | dio (fast)
+
+output:
+  format: wav

@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.cache/
+out/
+samples/**/*.wav
+samples/**/*.mp3
+samples/**/*.png
+samples/**/*.json
+datasets/**/*.wav
+!samples/**/.gitkeep
